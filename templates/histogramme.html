@@ -7,16 +7,14 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-             var data = google.visualization.arrayToDataTable();
+            var data = new google.visualization.DataTable();
             data.addColumn('string', 'Date');
             data.addColumn('number', 'Température (°C)');
-            
+
             // Ajoutez les données ici
-            data.addRows([
-                {% for date, temperature in zip(dates, temperatures) %}
-                ['{{ date }}', {{ temperature }}],
-                {% endfor %}
-            ]);
+            {% for entry in results %}
+            data.addRow(['{{ entry.Jour }}', {{ entry.temp }}]);
+            {% endfor %}
 
             var options = {
                 title: 'Températures à Paris pour les 16 prochains jours',
