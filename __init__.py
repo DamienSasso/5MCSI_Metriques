@@ -24,19 +24,16 @@ def meteo():
         dt_value = list_element.get('dt')
         temp_day_value = list_element.get('temp', {}).get('day') - 273.15  # Conversion de Kelvin en °C
         results.append({'Jour': dt_value, 'temp': temp_day_value})
-    
-    # Passer les résultats à la template rapport.html
-    return render_template("rapport.html", results=results)
+    return jsonify(results=results)
 
 @app.route("/rapport/")
 def mongraphique():
-    # Passer les résultats à la template rapport.html
-    return render_template("rapport.html", results=results)
+    return render_template("graphique.html")
 
 @app.route("/histogramme/")
 def histogramme():
-    # Passer les résultats à la template histogramme.html
-    return render_template("histogramme.html", results=results)
+    return render_template("histogramme.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
