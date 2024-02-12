@@ -51,6 +51,36 @@ def histogramme():
     return render_template("histogramme.html", results=results)
 
 
+# Route pour extraire le nombre de minutes à partir d'une date formatée
+@app.route('/extract-minutes/<date_string>')
+def extract_minutes(date_string):
+    date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
+    minutes = date_object.minute
+    return jsonify({'minutes': minutes})
+
+# Route pour afficher le nombre de commits par minute
+@app.route('/commits/')
+def commits():
+    # Appel à l'API de GitHub pour extraire les données sur les commits
+    response = urlopen('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
+    commits_data = json.loads(response.read().decode('utf-8'))
+
+    # Initialiser un dictionnaire pour compter le nombre de commits par minute
+    commits_per_minute = {}
+    for commit in commits_data:
+        # Extraire la date du commit et convertir en minute
+        commit_date = commit['commit']['author']['date']
+        commit_minute = datetime.strptime(commit_date, '%Y-%m-%dT%H:%M:%SZ').minute
+
+        # Incrémenter le compteur de commits pour cette minute
+        commits_per_minute[commit_minute] = commits_per_minute.get(commit_minute, 0) + 1
+
+    # Préparer les données pour le graphique
+    data = [{'minute': minute, 'commits': count} for minute, count in commits_per_minute.items()]
+
+    return jsonify(data)
+    
+
 if __name__ == "__main__":
     app.run(debug=True)
 
