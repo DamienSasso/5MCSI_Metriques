@@ -11,8 +11,13 @@ def hello_world():
     return render_template('hello.html')
 
 @app.route("/contact/")
-def MaPremiereAPI():
-    return "<h2>Ma page de contact</h2>"
+def contact():
+    return render_template("contact.html")
+
+@app.route("/submit_message/", methods=["POST"])
+def submit_message():
+    # Traitement de la soumission du formulaire (non implémenté dans cet exercice)
+    return "Message soumis avec succès!"
 
 @app.route('/paris/')
 def meteo():
